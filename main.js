@@ -65,7 +65,13 @@ function renderAllItems(catalog) {
   return $container
 }
 
-console.log(renderAllItems(app))
+function renderApp(appObject) {
+  let $view = document.querySelector('[data-view]')
+  $view.innerHTML = ''
+  $view.appendChild(renderAllItems(appObject))
+}
+
+renderApp(app)
 
 function createElement(tagName, attributes, children) {
   var $element = document.createElement(tagName)
