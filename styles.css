@@ -1,0 +1,11 @@
+html body {
+  background-color: rgb(236, 236, 236);
+}
+
+h1 {
+  font-size: 6rem;
+}
+
+.page-title {
+  font-family: "Poiret One", cursive;
+}
