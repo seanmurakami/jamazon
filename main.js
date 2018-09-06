@@ -86,15 +86,14 @@ let app = {
   }
 }
 
-function renderItem(catalogItem, number) {
-  let searchCatalog = catalogItem.catalog.items
+function renderItem(item) {
   let $item =
-    createElement('div', {class: 'card col-xl-3 col-lg-2 border-success mt-4 ml-2 mr-2 pt-4'}, [
-      createElement('img', {class: 'card-img-top', style: 'max-height: 14rem', src: searchCatalog[number].imageUrl, alt: 'image cap'}, []),
-      createElement('div', {class: 'card-body text-center d-flex flex-column'}, [
-        createElement('h5', {class: 'mt-auto card-title'}, [searchCatalog[number].brand]),
-        createElement('p', {class: 'card-text'}, [searchCatalog[number].name]),
-        createElement('p', {class: 'card-text text-success font-weight-bold'}, [searchCatalog[number].price])
+    createElement('div', {class: 'card border-success', style: 'height: 26rem'}, [
+      createElement('img', {class: 'card-img-top p-3', style: 'max-height: 15rem', src: item.imageUrl, alt: 'image cap'}, []),
+      createElement('div', {class: 'card-body text-center d-flex flex-column mt-auto'}, [
+        createElement('h5', {class: 'mt-auto card-title'}, [item.brand]),
+        createElement('p', {class: 'card-text'}, [item.name]),
+        createElement('p', {class: 'card-text text-success font-weight-bold'}, ['$' + item.price])
       ])
     ])
   return $item
@@ -102,11 +101,12 @@ function renderItem(catalogItem, number) {
 
 function renderAllItems(allItems) {
   let $container = createElement('div', {class: 'container mt-3'}, [])
-  let $header = createElement('h1', {class: 'font-weight-light text-center'}, ['Jamazon'])
-  let $row = createElement('row', {class: 'row d-flex justify-content-center'}, [])
-  let searchCatalog = app.catalog.items
-  for (let i = 0; i < searchCatalog.length; i++) {
-    $row.appendChild(renderItem(app, i))
+  let $header = createElement('h1', {class: 'page-title font-weight-light text-center'}, ['Jamazon'])
+  let $row = createElement('div', {class: 'row'}, [])
+  for (let i = 0; i < allItems.length; i++) {
+    let $column = createElement('div', {class: 'col-xl-3 col-lg-4 col-md-5 col-sm-8 col-8 mb-3'}, [])
+    $row.appendChild($column)
+    $column.appendChild(renderItem(allItems[i]))
   }
   $container.appendChild($header)
   $container.appendChild($row)
@@ -116,7 +116,7 @@ function renderAllItems(allItems) {
 function renderApp(appObject) {
   let $view = document.querySelector('[data-view]')
   $view.innerHTML = ''
-  $view.appendChild(renderAllItems(app))
+  $view.appendChild(renderAllItems(appObject.catalog.items))
 }
 
 renderApp(app)
