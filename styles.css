@@ -3,14 +3,9 @@ html body {
 }
 
 h1 {
-  text-align: center;
   font-size: 6rem;
 }
 
 html body h1 {
   font-family: "Poiret One", cursive;
-}
-
-div.card {
-  margin: 1rem;
 }
