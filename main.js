@@ -86,7 +86,8 @@ let app = {
   },
   details: {
     item: null
-  }
+  },
+  cart: []
 }
 
 function renderItem(item) {
@@ -131,7 +132,6 @@ function renderApp(appObject) {
 
 renderApp(app)
 
-// create a function that takes a catalog item and renders a DOM tree containing all the details of an item
 function renderDetail(item) {
   let $item =
     createElement('div', { class: 'container my-4' }, [
@@ -156,7 +156,7 @@ function renderDetail(item) {
   return $item
 }
 
-function viewItemObject(itemId, catalog) {
+function isolateObject(itemId, catalog) {
   for (let i = 0; i < catalog.length; i++) {
     if (itemId === catalog[i].itemId) {
       return catalog[i]
@@ -168,7 +168,7 @@ document.querySelector('.container').addEventListener('click', function (e) {
   let x = e.target.closest('.card')
   if (x !== null) {
     let viewId = parseInt(x.getAttribute('dataId'), 10)
-    let itemDetail = viewItemObject(viewId, app.catalog.items)
+    let itemDetail = isolateObject(viewId, app.catalog.items)
     app.details.item = itemDetail
     app.view = 'details'
     renderApp(app)
