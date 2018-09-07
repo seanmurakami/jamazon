@@ -130,7 +130,16 @@ function renderDetail(item) {
   return $item
 }
 
+function viewItemObject(itemId, catalog) {
+  for (let i = 0; i < catalog.length; i++) {
+    if (itemId === catalog[i].itemId) {
+      return catalog[i]
+    }
+  }
+}
+
 console.log(renderDetail(app.catalog.items))
+console.log(viewItemObject(1, app.catalog.items))
 
 function createElement(tagName, attributes, children) {
   var $element = document.createElement(tagName)
