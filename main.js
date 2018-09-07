@@ -178,6 +178,15 @@ document.querySelector('[data-view]').addEventListener('click', function (e) {
   }
 })
 
+document.querySelector('[data-view = details').addEventListener('click', function (e) {
+  let x = e.target.closest('.btn-primary')
+  if (x !== null) {
+    let $currentItem = app.details.item
+    app.cart.push($currentItem)
+    console.log(app.cart)
+  }
+})
+
 function showView(view) {
   let $findView = document.querySelectorAll('[data-view]')
   for (let i = 0; i < $findView.length; i++) {
