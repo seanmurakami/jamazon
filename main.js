@@ -1,5 +1,5 @@
 let app = {
-  view: 'catelog',
+  view: 'catalog',
   catalog: {
     items: [
       {
@@ -83,28 +83,31 @@ let app = {
         imageUrl: 'https://goo.gl/gJYUxz'
       }
     ]
+  },
+  details: {
+    item: null
   }
 }
 
 function renderItem(item) {
   let $item =
-    createElement('div', {class: 'card border-success', style: 'height: 26rem', dataId: item.itemId}, [
-      createElement('img', {class: 'card-img-top p-3', style: 'max-height: 15rem', src: item.imageUrl, alt: 'image cap'}, []),
-      createElement('div', {class: 'card-body text-center d-flex flex-column mt-auto'}, [
-        createElement('h5', {class: 'mt-auto card-title'}, [item.brand]),
-        createElement('p', {class: 'card-text'}, [item.name]),
-        createElement('p', {class: 'card-text text-success font-weight-bold'}, ['$' + item.price])
+    createElement('div', { class: 'card border-success', style: 'height: 26rem', dataId: item.itemId }, [
+      createElement('img', { class: 'card-img-top p-3', style: 'max-height: 15rem', src: item.imageUrl, alt: 'image cap' }, []),
+      createElement('div', { class: 'card-body text-center d-flex flex-column mt-auto' }, [
+        createElement('h5', { class: 'mt-auto card-title' }, [item.brand]),
+        createElement('p', { class: 'card-text' }, [item.name]),
+        createElement('p', { class: 'card-text text-success font-weight-bold' }, ['$' + item.price])
       ])
     ])
   return $item
 }
 
 function renderAllItems(allItems) {
-  let $container = createElement('div', {class: 'container mt-3'}, [])
-  let $header = createElement('h1', {class: 'page-title font-weight-light text-center'}, ['Jamazon'])
-  let $row = createElement('div', {class: 'row'}, [])
+  let $container = createElement('div', { class: 'container mt-3' }, [])
+  let $header = createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Jamazon'])
+  let $row = createElement('div', { class: 'row' }, [])
   for (let i = 0; i < allItems.length; i++) {
-    let $column = createElement('div', {class: 'col-xl-3 col-lg-4 col-md-5 col-sm-8 col-8 mb-3'}, [])
+    let $column = createElement('div', { class: 'col-xl-3 col-lg-4 col-md-5 col-sm-8 col-8 mb-3' }, [])
     $row.appendChild($column)
     $column.appendChild(renderItem(allItems[i]))
   }
@@ -114,10 +117,16 @@ function renderAllItems(allItems) {
 }
 
 function renderApp(appObject) {
-  let $view = document.querySelector('[data-view]')
-  $view.innerHTML = ''
-  removeView('catalog') // can remove later
-  $view.appendChild(renderAllItems(appObject.catalog.items))
+  let $view = document.querySelector('[data-view="' + appObject.view + '"]')
+  if (appObject.view === 'catalog') {
+    $view.innerHTML = ''
+    $view.appendChild(renderAllItems(appObject.catalog.items))
+  }
+  if (appObject.view === 'details') {
+    $view.innerHTML = ''
+    $view.appendChild(renderDetail(appObject.details.item))
+  }
+  showView(appObject.view)
 }
 
 renderApp(app)
@@ -125,9 +134,25 @@ renderApp(app)
 // create a function that takes a catalog item and renders a DOM tree containing all the details of an item
 function renderDetail(item) {
   let $item =
-  createElement('div', {class: 'card'}, [
-    createElement('p', {class: 'card-text'}, [item.details])
-  ])
+    createElement('div', { class: 'container my-4' }, [
+      createElement('div', { class: 'row' }, [
+        createElement('div', { class: 'card border-success' }, [
+          createElement('div', { class: 'row no-gutter p-5' }, [
+            createElement('div', { class: 'col-lg-4' }, [
+              createElement('img', { class: 'img-responsive w-100', src: item.imageUrl, alt: 'image cap' }, [])
+            ]),
+            createElement('div', { class: 'col' }, [
+              createElement('div', { class: 'card-body' }, [
+                createElement('h5', { class: 'card-title' }, [item.name]),
+                createElement('p', { class: 'card-text' }, [item.details]),
+                createElement('p', { class: 'card-text' }, [item.brand]),
+                createElement('p', { class: 'card-text text-success font-weight-bold' }, ['$' + item.price])
+              ])
+            ])
+          ])
+        ])
+      ])
+    ])
   return $item
 }
 
@@ -143,23 +168,24 @@ document.querySelector('.container').addEventListener('click', function (e) {
   let x = e.target.closest('.card')
   if (x !== null) {
     let viewId = parseInt(x.getAttribute('dataId'), 10)
+    let itemDetail = viewItemObject(viewId, app.catalog.items)
+    app.details.item = itemDetail
     app.view = 'details'
-    console.log(viewItemObject(viewId, app.catalog.items)) // can remove later
-    console.log(app.view) // can remove later
+    renderApp(app)
   }
 })
 
-function removeView(view) {
+function showView(view) {
   let $findView = document.querySelectorAll('[data-view]')
   for (let i = 0; i < $findView.length; i++) {
     if ($findView[i].getAttribute('data-view') !== view) {
       $findView[i].classList.add('hidden')
     }
+    else {
+      $findView[i].classList.remove('hidden')
+    }
   }
 }
-
-console.log(renderDetail(app.catalog.items[0])) // can remove later
-console.log(viewItemObject(1, app.catalog.items)) // can remove later
 
 function createElement(tagName, attributes, children) {
   var $element = document.createElement(tagName)
