@@ -87,7 +87,7 @@ let app = {
   details: {
     item: null
   },
-  cart: []
+  cart: {}
 }
 
 function renderItem(item) {
@@ -186,6 +186,17 @@ function showView(view) {
     }
   }
 }
+
+function cartCount(cart) {
+  let count = 0
+  for (let i = 0; i < cart.length; i++) {
+    count++
+  }
+  let $myCart = createElement('p', {}, ['Cart (' + count + ')'])
+  return $myCart
+}
+
+console.log(cartCount(app))
 
 function createElement(tagName, attributes, children) {
   var $element = document.createElement(tagName)
