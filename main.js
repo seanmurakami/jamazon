@@ -122,11 +122,14 @@ function renderApp(appObject) {
   let $view = document.querySelector('[data-view="' + appObject.view + '"]')
   if (appObject.view === 'catalog') {
     $view.innerHTML = ''
+    $cartView.innerHTML = ''
     $cartView.appendChild(cartCount(appObject.cart))
     $view.appendChild(renderAllItems(appObject.catalog.items))
   }
   if (appObject.view === 'details') {
     $view.innerHTML = ''
+    $cartView.innerHTML = ''
+    $cartView.appendChild(cartCount(appObject.cart))
     $view.appendChild(renderDetail(appObject.details.item))
   }
   showView(appObject.view)
@@ -183,8 +186,8 @@ document.querySelector('[data-view = details').addEventListener('click', functio
   if (x !== null) {
     let $currentItem = app.details.item
     app.cart.push($currentItem)
-    console.log(app.cart)
   }
+  renderApp(app)
 })
 
 function showView(view) {
@@ -202,7 +205,7 @@ function showView(view) {
 function cartCount(cart) {
   let count = 0
   for (let i = 0; i < cart.length; i++) {
-    count++
+    count = count + 1
   }
   let $myCart =
     createElement('div', {class: 'mt-3 d-flex flex-row-reverse'}, [
