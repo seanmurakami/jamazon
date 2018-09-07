@@ -121,6 +121,17 @@ function renderApp(appObject) {
 
 renderApp(app)
 
+// create a function that takes a catalog item and renders a DOM tree containing all the details of an item
+function renderDetail(item) {
+  let $item =
+  createElement('div', {class: 'card'}, [
+    createElement('p', {class: 'card-text'}, [item.details])
+  ])
+  return $item
+}
+
+console.log(renderDetail(app.catalog.items))
+
 function createElement(tagName, attributes, children) {
   var $element = document.createElement(tagName)
   if (attributes) {
