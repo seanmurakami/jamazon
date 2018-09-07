@@ -88,7 +88,7 @@ let app = {
 
 function renderItem(item) {
   let $item =
-    createElement('div', {class: 'card border-success', style: 'height: 26rem'}, [
+    createElement('div', {class: 'card border-success', style: 'height: 26rem', dataId: item.itemId}, [
       createElement('img', {class: 'card-img-top p-3', style: 'max-height: 15rem', src: item.imageUrl, alt: 'image cap'}, []),
       createElement('div', {class: 'card-body text-center d-flex flex-column mt-auto'}, [
         createElement('h5', {class: 'mt-auto card-title'}, [item.brand]),
@@ -124,7 +124,7 @@ renderApp(app)
 // create a function that takes a catalog item and renders a DOM tree containing all the details of an item
 function renderDetail(item) {
   let $item =
-  createElement('div', {class: 'card', id: 'data-item-id'}, [
+  createElement('div', {class: 'card'}, [
     createElement('p', {class: 'card-text'}, [item.details])
   ])
   return $item
@@ -137,6 +137,15 @@ function viewItemObject(itemId, catalog) {
     }
   }
 }
+
+document.querySelector('.container').addEventListener('click', function (e) {
+  let x = e.target.closest('.card')
+  if (x !== null) {
+    let viewId = parseInt(x.getAttribute('dataId'), 10)
+    app.view = 'details'
+    console.log(viewItemObject(viewId, app.catalog.items))
+  }
+})
 
 console.log(renderDetail(app.catalog.items[0]))
 console.log(viewItemObject(1, app.catalog.items))
