@@ -124,7 +124,7 @@ renderApp(app)
 // create a function that takes a catalog item and renders a DOM tree containing all the details of an item
 function renderDetail(item) {
   let $item =
-  createElement('div', {class: 'card'}, [
+  createElement('div', {class: 'card', id: 'data-item-id'}, [
     createElement('p', {class: 'card-text'}, [item.details])
   ])
   return $item
@@ -138,7 +138,7 @@ function viewItemObject(itemId, catalog) {
   }
 }
 
-console.log(renderDetail(app.catalog.items))
+console.log(renderDetail(app.catalog.items[0]))
 console.log(viewItemObject(1, app.catalog.items))
 
 function createElement(tagName, attributes, children) {
