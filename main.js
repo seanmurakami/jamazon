@@ -87,7 +87,7 @@ let app = {
   details: {
     item: null
   },
-  cart: {}
+  cart: []
 }
 
 function renderItem(item) {
@@ -118,9 +118,11 @@ function renderAllItems(allItems) {
 }
 
 function renderApp(appObject) {
+  let $cartView = document.querySelector('.cart')
   let $view = document.querySelector('[data-view="' + appObject.view + '"]')
   if (appObject.view === 'catalog') {
     $view.innerHTML = ''
+    $cartView.appendChild(cartCount(appObject.cart))
     $view.appendChild(renderAllItems(appObject.catalog.items))
   }
   if (appObject.view === 'details') {
@@ -164,7 +166,7 @@ function isolateObject(itemId, catalog) {
   }
 }
 
-document.querySelector('.container').addEventListener('click', function (e) {
+document.querySelector('[data-view]').addEventListener('click', function (e) {
   let x = e.target.closest('.card')
   if (x !== null) {
     let viewId = parseInt(x.getAttribute('dataId'), 10)
@@ -192,11 +194,12 @@ function cartCount(cart) {
   for (let i = 0; i < cart.length; i++) {
     count++
   }
-  let $myCart = createElement('p', {}, ['Cart (' + count + ')'])
+  let $myCart =
+    createElement('div', {class: 'mt-3 d-flex flex-row-reverse'}, [
+      createElement('p', {}, ['Cart (' + count + ')'])
+    ])
   return $myCart
 }
-
-console.log(cartCount(app))
 
 function createElement(tagName, attributes, children) {
   var $element = document.createElement(tagName)
