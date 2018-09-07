@@ -116,6 +116,7 @@ function renderAllItems(allItems) {
 function renderApp(appObject) {
   let $view = document.querySelector('[data-view]')
   $view.innerHTML = ''
+  removeView('catalog') // can remove later
   $view.appendChild(renderAllItems(appObject.catalog.items))
 }
 
@@ -143,12 +144,22 @@ document.querySelector('.container').addEventListener('click', function (e) {
   if (x !== null) {
     let viewId = parseInt(x.getAttribute('dataId'), 10)
     app.view = 'details'
-    console.log(viewItemObject(viewId, app.catalog.items))
+    console.log(viewItemObject(viewId, app.catalog.items)) // can remove later
+    console.log(app.view) // can remove later
   }
 })
 
-console.log(renderDetail(app.catalog.items[0]))
-console.log(viewItemObject(1, app.catalog.items))
+function removeView(view) {
+  let $findView = document.querySelectorAll('[data-view]')
+  for (let i = 0; i < $findView.length; i++) {
+    if ($findView[i].getAttribute('data-view') !== view) {
+      $findView[i].classList.add('hidden')
+    }
+  }
+}
+
+console.log(renderDetail(app.catalog.items[0])) // can remove later
+console.log(viewItemObject(1, app.catalog.items)) // can remove later
 
 function createElement(tagName, attributes, children) {
   var $element = document.createElement(tagName)
