@@ -148,7 +148,8 @@ function renderDetail(item) {
                 createElement('h5', { class: 'card-title' }, [item.name]),
                 createElement('p', { class: 'card-text' }, [item.details]),
                 createElement('p', { class: 'card-text' }, [item.brand]),
-                createElement('p', { class: 'card-text text-success font-weight-bold' }, ['$' + item.price])
+                createElement('p', { class: 'card-text text-success font-weight-bold' }, ['$' + item.price]),
+                createElement('button', {class: 'p-2 btn-primary'}, ['Add to Cart'])
               ])
             ])
           ])
