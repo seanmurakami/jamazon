@@ -86,7 +86,8 @@ let app = {
   },
   details: {
     item: null
-  }
+  },
+  cart: []
 }
 
 function renderItem(item) {
@@ -117,21 +118,24 @@ function renderAllItems(allItems) {
 }
 
 function renderApp(appObject) {
+  let $cartView = document.querySelector('.cart')
   let $view = document.querySelector('[data-view="' + appObject.view + '"]')
   if (appObject.view === 'catalog') {
     $view.innerHTML = ''
+    $cartView.innerHTML = ''
     $view.appendChild(renderAllItems(appObject.catalog.items))
   }
   if (appObject.view === 'details') {
     $view.innerHTML = ''
+    $cartView.innerHTML = ''
     $view.appendChild(renderDetail(appObject.details.item))
   }
+  $cartView.appendChild(cartCount(appObject.cart))
   showView(appObject.view)
 }
 
 renderApp(app)
 
-// create a function that takes a catalog item and renders a DOM tree containing all the details of an item
 function renderDetail(item) {
   let $item =
     createElement('div', { class: 'container my-4' }, [
@@ -146,7 +150,8 @@ function renderDetail(item) {
                 createElement('h5', { class: 'card-title' }, [item.name]),
                 createElement('p', { class: 'card-text' }, [item.details]),
                 createElement('p', { class: 'card-text' }, [item.brand]),
-                createElement('p', { class: 'card-text text-success font-weight-bold' }, ['$' + item.price])
+                createElement('p', { class: 'card-text text-success font-weight-bold' }, ['$' + item.price]),
+                createElement('button', {class: 'p-2 btn-primary'}, ['Add to Cart'])
               ])
             ])
           ])
@@ -156,7 +161,7 @@ function renderDetail(item) {
   return $item
 }
 
-function viewItemObject(itemId, catalog) {
+function isolateObject(itemId, catalog) {
   for (let i = 0; i < catalog.length; i++) {
     if (itemId === catalog[i].itemId) {
       return catalog[i]
@@ -164,15 +169,24 @@ function viewItemObject(itemId, catalog) {
   }
 }
 
-document.querySelector('.container').addEventListener('click', function (e) {
+document.querySelector('[data-view]').addEventListener('click', function (e) {
   let x = e.target.closest('.card')
   if (x !== null) {
     let viewId = parseInt(x.getAttribute('dataId'), 10)
-    let itemDetail = viewItemObject(viewId, app.catalog.items)
+    let itemDetail = isolateObject(viewId, app.catalog.items)
     app.details.item = itemDetail
     app.view = 'details'
     renderApp(app)
   }
+})
+
+document.querySelector('[data-view = details').addEventListener('click', function (e) {
+  let $button = e.target.closest('.btn-primary')
+  if ($button !== null) {
+    let $currentItem = app.details.item
+    app.cart.push($currentItem)
+  }
+  renderApp(app)
 })
 
 function showView(view) {
@@ -185,6 +199,15 @@ function showView(view) {
       $findView[i].classList.remove('hidden')
     }
   }
+}
+
+function cartCount(cart) {
+  let count = cart.length
+  let $myCart =
+    createElement('div', {class: 'mt-3 d-flex flex-row-reverse'}, [
+      createElement('p', {}, ['Cart (' + count + ')'])
+    ])
+  return $myCart
 }
 
 function createElement(tagName, attributes, children) {
