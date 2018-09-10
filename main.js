@@ -196,10 +196,14 @@ function renderAllCartItems(items) {
     $row.appendChild(renderCartItem(items[i]))
     $container.appendChild($row)
   }
-  let $itemCount = createElement('p', { class: 'text-right' }, [items.length + ' Items'])
+  let $itemCount = createElement('p', { class: 'text-right' }, [items.length + ' Item(s)'])
   let $itemTotal = createElement('p', { class: 'text-right text-success font-weight-bold' }, ['Total: $' + calcTotal(items)])
+  let $goBackDiv = createElement('div', {class: 'd-flex justify-content-center'}, [])
+  let $keepShopping = createElement('button', {class: 'p-2 btn-primary', continue: 'continue-shopping'}, ['Continue Shopping'])
+  $goBackDiv.appendChild($keepShopping)
   $container.appendChild($itemCount)
   $container.appendChild($itemTotal)
+  $container.appendChild($goBackDiv)
   return $container
 }
 
@@ -241,6 +245,14 @@ document.querySelector('[data-view = details]').addEventListener('click', functi
 
 document.querySelector('[data-view = details]').addEventListener('click', function (e) {
   let $button = e.target.getAttribute('back')
+  if ($button !== null) {
+    app.view = 'catalog'
+  }
+  renderApp(app)
+})
+
+document.querySelector('[data-view = cart]').addEventListener('click', function (e) {
+  let $button = e.target.getAttribute('continue')
   if ($button !== null) {
     app.view = 'catalog'
   }
