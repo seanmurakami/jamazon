@@ -162,6 +162,29 @@ function renderDetail(item) {
   return $item
 }
 
+function renderCartItem(item) {
+  createElement('div', {class: 'container my-4'}, [
+    createElement('div', {class: 'row'}, [
+      createElement('div', {class: 'card border-success'}, [
+        createElement('div', {class: 'row no-gutter p-5'}, [
+          createElement('div', {class: 'col-lg-4'}, [
+            createElement('img', {class: 'img-responsive w-100', src: item.imageUrl, alt: 'cart image'}, [])
+          ]),
+          createElement('div', {class: 'col'}, [
+            createElement('div', {class: 'card-body'}, [
+              createElement('h5', {class: 'card-title'}, [item.name]),
+              createElement('p', {class: 'card-text'}, [item.brand]),
+              createElement('p', {class: 'card-text'}, ['$' + item.price])
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+
+console.log(renderCartItem(app.cart[0]))
+
 function isolateObject(itemId, catalog) {
   for (let i = 0; i < catalog.length; i++) {
     if (itemId === catalog[i].itemId) {
