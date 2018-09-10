@@ -151,7 +151,8 @@ function renderDetail(item) {
                 createElement('p', { class: 'card-text' }, [item.details]),
                 createElement('p', { class: 'card-text' }, [item.brand]),
                 createElement('p', { class: 'card-text text-success font-weight-bold' }, ['$' + item.price]),
-                createElement('button', {class: 'p-2 btn-primary'}, ['Add to Cart'])
+                createElement('button', {class: 'p-2 btn-primary', cart: 'add-to-cart'}, ['Add to Cart']),
+                createElement('button', {class: 'p-2 btn-primary ml-3 pl-4 pr-4', back: 'return'}, ['Back'])
               ])
             ])
           ])
@@ -181,10 +182,18 @@ document.querySelector('[data-view]').addEventListener('click', function (e) {
 })
 
 document.querySelector('[data-view = details').addEventListener('click', function (e) {
-  let $button = e.target.closest('.btn-primary')
+  let $button = e.target.getAttribute('cart')
   if ($button !== null) {
     let $currentItem = app.details.item
     app.cart.push($currentItem)
+  }
+  renderApp(app)
+})
+
+document.querySelector('[data-view = details').addEventListener('click', function (e) {
+  let $button = e.target.getAttribute('back')
+  if ($button !== null) {
+    app.view = 'catalog'
   }
   renderApp(app)
 })
