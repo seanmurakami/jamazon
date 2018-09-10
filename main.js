@@ -191,10 +191,21 @@ function renderAllCartItems(items) {
     $row.appendChild(renderCartItem(items[i]))
     $header.appendChild($row)
   }
+  let $itemCount = createElement('p', {class: 'float-right'}, [items.length + ' Items'])
+  let $itemTotal = createElement('p', {class: 'float-right'}, ['Total: ' + calcTotal(items)])
   $container.appendChild($header)
+  $container.appendChild($itemCount)
+  $container.appendChild($itemTotal)
   return $container
 }
 
+function calcTotal(myArray) {
+  let total = 0
+  for (let i = 0; i < myArray.length; i++) {
+    total += parseInt(myArray[i].price, 10)
+  }
+  return total
+}
 console.log(renderAllCartItems())
 
 function isolateObject(itemId, catalog) {
