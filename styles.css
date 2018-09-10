@@ -13,3 +13,7 @@ h1 {
 .hidden {
   display: none;
 }
+
+.my-cart:hover {
+  cursor: pointer;
+}

@@ -118,7 +118,7 @@ function renderAllItems(allItems) {
 }
 
 function renderApp(appObject) {
-  let $cartView = document.querySelector('.cart')
+  let $cartView = document.querySelector('.my-cart')
   let $view = document.querySelector('[data-view="' + appObject.view + '"]')
   if (appObject.view === 'catalog') {
     $view.innerHTML = ''
@@ -129,6 +129,11 @@ function renderApp(appObject) {
     $view.innerHTML = ''
     $cartView.innerHTML = ''
     $view.appendChild(renderDetail(appObject.details.item))
+  }
+  if (appObject.view === 'cart') {
+    $view.innerHTML = ''
+    $cartView.innerHTML = ''
+    $view.appendChild(renderAllCartItems(appObject.cart))
   }
   $cartView.appendChild(cartCount(appObject.cart))
   showView(appObject.view)
@@ -151,8 +156,8 @@ function renderDetail(item) {
                 createElement('p', { class: 'card-text' }, [item.details]),
                 createElement('p', { class: 'card-text' }, [item.brand]),
                 createElement('p', { class: 'card-text text-success font-weight-bold' }, ['$' + item.price]),
-                createElement('button', {class: 'p-2 btn-primary', cart: 'add-to-cart'}, ['Add to Cart']),
-                createElement('button', {class: 'p-2 btn-primary ml-3 pl-4 pr-4', back: 'return'}, ['Back'])
+                createElement('button', { class: 'p-2 btn-primary', cart: 'add-to-cart' }, ['Add to Cart']),
+                createElement('button', { class: 'p-2 btn-primary ml-3 pl-4 pr-4', back: 'return' }, ['Back'])
               ])
             ])
           ])
@@ -163,37 +168,36 @@ function renderDetail(item) {
 }
 
 function renderCartItem(item) {
-  createElement('div', {class: 'container my-4'}, [
-    createElement('div', {class: 'row'}, [
-      createElement('div', {class: 'card border-success'}, [
-        createElement('div', {class: 'row no-gutter p-5'}, [
-          createElement('div', {class: 'col-lg-4'}, [
-            createElement('img', {class: 'img-responsive w-100', src: item.imageUrl, alt: 'cart image'}, [])
-          ]),
-          createElement('div', {class: 'col'}, [
-            createElement('div', {class: 'card-body'}, [
-              createElement('h5', {class: 'card-title'}, [item.name]),
-              createElement('p', {class: 'card-text'}, [item.brand]),
-              createElement('p', {class: 'card-text'}, ['$' + item.price])
-            ])
+  let $item =
+    createElement('div', { class: 'card border-success' }, [
+      createElement('div', { class: 'row no-gutter p-5' }, [
+        createElement('div', { class: 'col-lg-4' }, [
+          createElement('img', { class: 'img-responsive w-100', src: item.imageUrl, alt: 'cart image' }, [])
+        ]),
+        createElement('div', { class: 'col d-flex align-items-center' }, [
+          createElement('div', { class: 'card-body' }, [
+            createElement('h2', { class: 'card-title' }, [item.name]),
+            createElement('p', { class: 'card-text' }, [item.brand]),
+            createElement('p', { class: 'card-text' }, [item.description]),
+            createElement('p', { class: 'card-text text-success font-weight-bold' }, ['$' + item.price])
           ])
         ])
       ])
     ])
-  ])
+  return $item
 }
 
 function renderAllCartItems(items) {
-  let $container = createElement('div', {class: 'container'}, [])
-  let $header = createElement('h1', {class: 'page-title font-weight-light text-center'}, [])
-  for (let i = 0; i < items.length; i++) {
-    let $row = createElement('div', {class: 'row'}, [])
-    $row.appendChild(renderCartItem(items[i]))
-    $header.appendChild($row)
-  }
-  let $itemCount = createElement('p', {class: 'float-right'}, [items.length + ' Items'])
-  let $itemTotal = createElement('p', {class: 'float-right'}, ['Total: ' + calcTotal(items)])
+  let $container = createElement('div', { class: 'container my-4' }, [])
+  let $header = createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Cart'])
   $container.appendChild($header)
+  for (let i = 0; i < items.length; i++) {
+    let $row = createElement('div', { class: 'mb-3' }, [])
+    $row.appendChild(renderCartItem(items[i]))
+    $container.appendChild($row)
+  }
+  let $itemCount = createElement('p', { class: 'text-right' }, [items.length + ' Items'])
+  let $itemTotal = createElement('p', { class: 'text-right text-success font-weight-bold' }, ['Total: $' + calcTotal(items)])
   $container.appendChild($itemCount)
   $container.appendChild($itemTotal)
   return $container
@@ -202,11 +206,10 @@ function renderAllCartItems(items) {
 function calcTotal(myArray) {
   let total = 0
   for (let i = 0; i < myArray.length; i++) {
-    total += parseInt(myArray[i].price, 10)
+    total += Math.round(myArray[i].price * 100) / 100
   }
   return total
 }
-console.log(renderAllCartItems())
 
 function isolateObject(itemId, catalog) {
   for (let i = 0; i < catalog.length; i++) {
@@ -227,7 +230,7 @@ document.querySelector('[data-view]').addEventListener('click', function (e) {
   }
 })
 
-document.querySelector('[data-view = details').addEventListener('click', function (e) {
+document.querySelector('[data-view = details]').addEventListener('click', function (e) {
   let $button = e.target.getAttribute('cart')
   if ($button !== null) {
     let $currentItem = app.details.item
@@ -236,12 +239,20 @@ document.querySelector('[data-view = details').addEventListener('click', functio
   renderApp(app)
 })
 
-document.querySelector('[data-view = details').addEventListener('click', function (e) {
+document.querySelector('[data-view = details]').addEventListener('click', function (e) {
   let $button = e.target.getAttribute('back')
   if ($button !== null) {
     app.view = 'catalog'
   }
   renderApp(app)
+})
+
+document.querySelector('.my-cart').addEventListener('click', function (e) {
+  let $cart = e.target.getAttribute('clicker')
+  if ($cart !== null) {
+    app.view = 'cart'
+    renderApp(app)
+  }
 })
 
 function showView(view) {
@@ -256,11 +267,11 @@ function showView(view) {
   }
 }
 
-function cartCount(cart) {
-  let count = cart.length
+function cartCount(myCart) {
+  let count = myCart.length
   let $myCart =
-    createElement('div', {class: 'mt-3 d-flex flex-row-reverse'}, [
-      createElement('p', {}, ['Cart (' + count + ')'])
+    createElement('div', { class: 'mt-3 d-flex flex-row-reverse' }, [
+      createElement('p', { clicker: 'cartView' }, ['Cart (' + count + ')'])
     ])
   return $myCart
 }
