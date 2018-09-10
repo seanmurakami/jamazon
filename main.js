@@ -183,7 +183,19 @@ function renderCartItem(item) {
   ])
 }
 
-console.log(renderCartItem(app.cart[0]))
+function renderAllCartItems(items) {
+  let $container = createElement('div', {class: 'container'}, [])
+  let $header = createElement('h1', {class: 'page-title font-weight-light text-center'}, [])
+  for (let i = 0; i < items.length; i++) {
+    let $row = createElement('div', {class: 'row'}, [])
+    $row.appendChild(renderCartItem(items[i]))
+    $header.appendChild($row)
+  }
+  $container.appendChild($header)
+  return $container
+}
+
+console.log(renderAllCartItems())
 
 function isolateObject(itemId, catalog) {
   for (let i = 0; i < catalog.length; i++) {
