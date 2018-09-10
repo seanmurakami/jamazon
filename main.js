@@ -135,6 +135,11 @@ function renderApp(appObject) {
     $cartView.innerHTML = ''
     $view.appendChild(renderAllCartItems(appObject.cart))
   }
+  if (appObject.view === 'checkout') {
+    $view.innerHTML = ''
+    $cartView.innerHTML = ''
+    $view.appendChild(renderCheckoutItem(appObject.cart))
+  }
   $cartView.appendChild(cartCount(appObject.cart))
   showView(appObject.view)
 }
@@ -185,6 +190,29 @@ function renderCartItem(item) {
       ])
     ])
   return $item
+}
+
+function renderCheckoutItem(items) {
+  let $container = createElement('div', { class: 'container my-4' }, [])
+  let $header = createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Checkout'])
+  $container.appendChild($header)
+  let $cardBody = createElement('div', {class: 'mx-auto card border-success p-4', style: 'width: 40%'}, [])
+  let $cardHeader = createElement('h2', {}, ['Customer Info'])
+  $cardBody.appendChild($cardHeader)
+  let $name = createElement('input', {class: 'd-block mb-3', type: 'text', placeholder: 'Name'}, [])
+  let $address = createElement('input', {class: 'd-block mb-3', type: 'text', placeholder: 'Address'}, [])
+  let $credit = createElement('input', {class: 'd-block mb-3', type: 'text', placeholder: 'Credit Card'}, [])
+  $cardBody.appendChild($name)
+  $cardBody.appendChild($address)
+  $cardBody.appendChild($credit)
+  let $itemCount = createElement('p', { class: 'text-right' }, [items.length + ' Item(s)'])
+  let $itemTotal = createElement('p', { class: 'text-right text-success font-weight-bold' }, ['Total: $' + calcTotal(items)])
+  let $payButton = createElement('button', {class: 'p-2 btn-primary'}, ['Pay'])
+  $cardBody.appendChild($itemCount)
+  $cardBody.appendChild($itemTotal)
+  $cardBody.appendChild($payButton)
+  $container.appendChild($cardBody)
+  return $container
 }
 
 function renderAllCartItems(items) {
@@ -257,6 +285,14 @@ document.querySelector('[data-view = cart]').addEventListener('click', function 
   let $button = e.target.getAttribute('continue')
   if ($button !== null) {
     app.view = 'catalog'
+  }
+  renderApp(app)
+})
+
+document.querySelector('[data-view = cart]').addEventListener('click', function (e) {
+  let $button = e.target.getAttribute('checkout')
+  if ($button !== null) {
+    app.view = 'checkout'
   }
   renderApp(app)
 })
