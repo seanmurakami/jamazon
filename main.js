@@ -87,7 +87,8 @@ let app = {
   details: {
     item: null
   },
-  cart: []
+  cart: [],
+  filtered: []
 }
 
 function renderItem(item) {
@@ -106,7 +107,7 @@ function renderItem(item) {
 function renderAllItems(allItems) {
   let $container = createElement('div', { class: 'container mt-3' }, [])
   let $header = createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Jamazon'])
-  let $descendingButton = createElement('button', {class: 'btn btn-primary mb-3'}, ['High to Low'])
+  let $descendingButton = createElement('button', {class: 'btn btn-primary mb-3', sort: 'low-to-high'}, ['Low to High'])
   let $row = createElement('div', { class: 'row' }, [])
   for (let i = 0; i < allItems.length; i++) {
     let $column = createElement('div', { class: 'col-xl-3 col-lg-4 col-md-5 col-sm-8 col-8 mb-3' }, [])
@@ -119,6 +120,18 @@ function renderAllItems(allItems) {
   return $container
 }
 
+function compareNumbers(a, b) {
+  return a.price - b.price
+}
+
+function updateFilter(myItems) {
+  let emptyFilter = []
+  for (let i = 0; i < myItems.length; i++) {
+    emptyFilter.push(myItems[i])
+  }
+  return emptyFilter.sort(compareNumbers)
+}
+
 function renderApp(appObject) {
   let $cartView = document.querySelector('.my-cart')
   let $view = document.querySelector('[data-view="' + appObject.view + '"]')
@@ -126,6 +139,11 @@ function renderApp(appObject) {
     $view.innerHTML = ''
     $cartView.innerHTML = ''
     $view.appendChild(renderAllItems(appObject.catalog.items))
+  }
+  if (appObject.view === 'sorted') { // use this for the filtered view
+    $view.innerHTML = ''
+    $cartView.innerHTML = ''
+    $view.appendChild(renderAllItems(appObject.filtered))
   }
   if (appObject.view === 'details') {
     $view.innerHTML = ''
@@ -280,6 +298,15 @@ function isolateObject(itemId, catalog) {
     }
   }
 }
+
+document.querySelector('[data-view]').addEventListener('click', function (e) {
+  let $filterButton = e.target.getAttribute('sort')
+  if ($filterButton !== null) {
+    app.view = 'sorted'
+    app.filtered = updateFilter(app.catalog.items)
+    renderApp(app)
+  }
+})
 
 document.querySelector('[data-view]').addEventListener('click', function (e) {
   let x = e.target.closest('.card')
