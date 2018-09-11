@@ -140,6 +140,11 @@ function renderApp(appObject) {
     $cartView.innerHTML = ''
     $view.appendChild(renderCheckoutItem(appObject.cart))
   }
+  if (appObject.view === 'confirmation') {
+    $view.innerHTML = ''
+    $cartView.innerHTML = ''
+    $view.appendChild(confirmationMessage())
+  }
   $cartView.appendChild(cartCount(appObject.cart))
   showView(appObject.view)
 }
@@ -193,25 +198,18 @@ function renderCartItem(item) {
 }
 
 function renderCheckoutItem(items) {
-  let $container = createElement('div', { class: 'container my-4' }, [])
-  let $header = createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Checkout'])
-  $container.appendChild($header)
-  let $cardBody = createElement('div', {class: 'mx-auto card border-success p-4', style: 'width: 40%'}, [])
-  let $cardHeader = createElement('h2', {}, ['Customer Info'])
-  $cardBody.appendChild($cardHeader)
-  let $name = createElement('input', {class: 'd-block mb-3', type: 'text', placeholder: 'Name'}, [])
-  let $address = createElement('input', {class: 'd-block mb-3', type: 'text', placeholder: 'Address'}, [])
-  let $credit = createElement('input', {class: 'd-block mb-3', type: 'text', placeholder: 'Credit Card'}, [])
-  $cardBody.appendChild($name)
-  $cardBody.appendChild($address)
-  $cardBody.appendChild($credit)
-  let $itemCount = createElement('p', { class: 'text-right' }, [items.length + ' Item(s)'])
-  let $itemTotal = createElement('p', { class: 'text-right text-success font-weight-bold' }, ['Total: $' + calcTotal(items)])
-  let $payButton = createElement('button', {class: 'p-2 btn-primary'}, ['Pay'])
-  $cardBody.appendChild($itemCount)
-  $cardBody.appendChild($itemTotal)
-  $cardBody.appendChild($payButton)
-  $container.appendChild($cardBody)
+  let $container = createElement('div', { class: 'container my-4' }, [
+    createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Checkout']),
+    createElement('div', { class: 'mx-auto card border-success p-4', style: 'width: 50%' }, [
+      createElement('h2', {}, ['Customer Info']),
+      createElement('input', { class: 'd-block mb-3', type: 'text', placeholder: 'Name' }, []),
+      createElement('input', { class: 'd-block mb-3', type: 'text', placeholder: 'Address' }, []),
+      createElement('input', { class: 'd-block mb-3', type: 'text', placeholder: 'Credit Card' }, []),
+      createElement('p', { class: 'text-right' }, [items.length + ' Item(s)']),
+      createElement('p', { class: 'text-right text-success font-weight-bold' }, ['Total: $' + calcTotal(items)]),
+      createElement('button', { class: 'p-2 btn-primary', pay: 'go-to-message' }, ['Pay'])
+    ])
+  ])
   return $container
 }
 
@@ -220,20 +218,32 @@ function renderAllCartItems(items) {
   let $header = createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Cart'])
   $container.appendChild($header)
   for (let i = 0; i < items.length; i++) {
-    let $row = createElement('div', { class: 'mb-3' }, [])
+    let $row = createElement('div', {class: 'mb-3'}, [])
     $row.appendChild(renderCartItem(items[i]))
     $container.appendChild($row)
   }
   let $itemCount = createElement('p', { class: 'text-right' }, [items.length + ' Item(s)'])
   let $itemTotal = createElement('p', { class: 'text-right text-success font-weight-bold' }, ['Total: $' + calcTotal(items)])
-  let $goBackDiv = createElement('div', {class: 'd-flex justify-content-center'}, [])
-  let $keepShopping = createElement('button', {class: 'p-2 btn-primary', continue: 'continue-shopping'}, ['Continue Shopping'])
-  let $checkout = createElement('button', {class: 'p-2 btn-primary ml-3', checkout: 'checkout-page'}, ['Checkout'])
-  $goBackDiv.appendChild($keepShopping)
-  $goBackDiv.appendChild($checkout)
+  let $goBackDiv = createElement('div', { class: 'd-flex justify-content-center' }, [
+    createElement('button', { class: 'p-2 btn-primary', continue: 'continue-shopping' }, ['Continue Shopping']),
+    createElement('button', { class: 'p-2 btn-primary ml-3', checkout: 'checkout-page' }, ['Checkout'])
+  ])
   $container.appendChild($itemCount)
   $container.appendChild($itemTotal)
   $container.appendChild($goBackDiv)
+  return $container
+}
+
+function confirmationMessage() {
+  let $container = createElement('div', { class: 'container text-center' }, [
+    createElement('h1', { class: 'page-title font-weight-light' }, ['Thank you!']),
+    createElement('div', { class: 'card mx-auto', style: 'width: 50%' }, [
+      createElement('div', {class: 'card-body'}, [
+        createElement('p', {class: 'card-text'}, ['We appreciate your business!']),
+        createElement('button', {class: 'p-2 btn-primary', homepage: 'go-home'}, ['Return to Home Screen'])
+      ])
+    ])
+  ])
   return $container
 }
 
@@ -301,6 +311,23 @@ document.querySelector('.my-cart').addEventListener('click', function (e) {
   let $cart = e.target.getAttribute('clicker')
   if ($cart !== null) {
     app.view = 'cart'
+    renderApp(app)
+  }
+})
+
+document.querySelector('[data-view = checkout').addEventListener('click', function (e) {
+  let $checkout = e.target.getAttribute('pay')
+  if ($checkout !== null) {
+    app.view = 'confirmation'
+    renderApp(app)
+  }
+})
+
+document.querySelector('[data-view = confirmation').addEventListener('click', function (e) {
+  let $checkout = e.target.getAttribute('homepage')
+  if ($checkout !== null) {
+    app.view = 'catalog'
+    app.cart = []
     renderApp(app)
   }
 })
