@@ -214,11 +214,11 @@ function renderCheckoutItem(items) {
         ]),
         createElement('div', { class: 'form-group' }, [
           createElement('label', {}, ['Address']),
-          createElement('input', { class: 'form-control d-block mb-3', type: 'text', placeholder: 'Enter address' }, [])
+          createElement('input', { class: 'form-control mb-3', type: 'text', placeholder: 'Enter address' }, [])
         ]),
         createElement('div', { class: 'form-group' }, [
           createElement('label', {}, ['Credit Card']),
-          createElement('input', { class: 'form-control d-block mb-3', type: 'text', placeholder: 'Enter credit card information' }, [])
+          createElement('input', { class: 'form-control mb-3', type: 'text', placeholder: 'Enter credit card information' }, [])
         ]),
         createElement('p', { class: 'text-right' }, [items.length + ' Item(s)']),
         createElement('p', { class: 'text-right text-success font-weight-bold' }, ['Total: $' + calcTotal(items)]),
