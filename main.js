@@ -135,6 +135,16 @@ function renderApp(appObject) {
     $cartView.innerHTML = ''
     $view.appendChild(renderAllCartItems(appObject.cart))
   }
+  if (appObject.view === 'checkout') {
+    $view.innerHTML = ''
+    $cartView.innerHTML = ''
+    $view.appendChild(renderCheckoutItem(appObject.cart))
+  }
+  if (appObject.view === 'confirmation') {
+    $view.innerHTML = ''
+    $cartView.innerHTML = ''
+    $view.appendChild(confirmationMessage())
+  }
   $cartView.appendChild(cartCount(appObject.cart))
   showView(appObject.view)
 }
@@ -187,6 +197,38 @@ function renderCartItem(item) {
   return $item
 }
 
+function renderCheckoutItem(items) {
+  let $container = createElement('div', { class: 'container my-4' }, [
+    createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Checkout']),
+    createElement('div', { class: 'mx-auto card border-success p-4', style: 'width: 50%' }, [
+      createElement('h2', {}, ['Customer Info']),
+      createElement('div', { class: 'form-group' }, [
+        createElement('label', {}, ['Name']),
+        createElement('div', { class: 'form-row' }, [
+          createElement('div', { class: 'col' }, [
+            createElement('input', { class: 'form-control mb-3', type: 'text', placeholder: 'First name' }, [])
+          ]),
+          createElement('div', { class: 'col' }, [
+            createElement('input', { class: 'form-control mb-3', type: 'text', placeholder: 'Last name' }, [])
+          ])
+        ]),
+        createElement('div', { class: 'form-group' }, [
+          createElement('label', {}, ['Address']),
+          createElement('input', { class: 'form-control mb-3', type: 'text', placeholder: 'Enter address' }, [])
+        ]),
+        createElement('div', { class: 'form-group' }, [
+          createElement('label', {}, ['Credit Card']),
+          createElement('input', { class: 'form-control mb-3', type: 'text', placeholder: 'Enter credit card information' }, [])
+        ]),
+        createElement('p', { class: 'text-right' }, [items.length + ' Item(s)']),
+        createElement('p', { class: 'text-right text-success font-weight-bold' }, ['Total: $' + calcTotal(items)]),
+        createElement('button', { class: 'form-control p-2 btn-primary', pay: 'go-to-message' }, ['Pay'])
+      ])
+    ])
+  ])
+  return $container
+}
+
 function renderAllCartItems(items) {
   let $container = createElement('div', { class: 'container my-4' }, [])
   let $header = createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Cart'])
@@ -198,12 +240,26 @@ function renderAllCartItems(items) {
   }
   let $itemCount = createElement('p', { class: 'text-right' }, [items.length + ' Item(s)'])
   let $itemTotal = createElement('p', { class: 'text-right text-success font-weight-bold' }, ['Total: $' + calcTotal(items)])
-  let $goBackDiv = createElement('div', {class: 'd-flex justify-content-center'}, [])
-  let $keepShopping = createElement('button', {class: 'p-2 btn-primary', continue: 'continue-shopping'}, ['Continue Shopping'])
-  $goBackDiv.appendChild($keepShopping)
+  let $goBackDiv = createElement('div', { class: 'd-flex justify-content-center' }, [
+    createElement('button', { class: 'p-2 btn-primary', continue: 'continue-shopping' }, ['Continue Shopping']),
+    createElement('button', { class: 'p-2 btn-primary ml-3', checkout: 'checkout-page' }, ['Checkout'])
+  ])
   $container.appendChild($itemCount)
   $container.appendChild($itemTotal)
   $container.appendChild($goBackDiv)
+  return $container
+}
+
+function confirmationMessage() {
+  let $container = createElement('div', { class: 'container text-center' }, [
+    createElement('h1', { class: 'page-title font-weight-light' }, ['Thank you!']),
+    createElement('div', { class: 'card mx-auto border-success', style: 'width: 50%' }, [
+      createElement('div', { class: 'card-body' }, [
+        createElement('p', { class: 'card-text' }, ['We appreciate your business!']),
+        createElement('button', { class: 'p-2 btn-primary', homepage: 'go-home' }, ['Return to Home Screen'])
+      ])
+    ])
+  ])
   return $container
 }
 
@@ -259,10 +315,35 @@ document.querySelector('[data-view = cart]').addEventListener('click', function 
   renderApp(app)
 })
 
+document.querySelector('[data-view = cart]').addEventListener('click', function (e) {
+  let $button = e.target.getAttribute('checkout')
+  if ($button !== null) {
+    app.view = 'checkout'
+  }
+  renderApp(app)
+})
+
 document.querySelector('.my-cart').addEventListener('click', function (e) {
   let $cart = e.target.getAttribute('clicker')
   if ($cart !== null) {
     app.view = 'cart'
+    renderApp(app)
+  }
+})
+
+document.querySelector('[data-view = checkout]').addEventListener('click', function (e) {
+  let $checkout = e.target.getAttribute('pay')
+  if ($checkout !== null) {
+    app.view = 'confirmation'
+    renderApp(app)
+  }
+})
+
+document.querySelector('[data-view = confirmation]').addEventListener('click', function (e) {
+  let $checkout = e.target.getAttribute('homepage')
+  if ($checkout !== null) {
+    app.view = 'catalog'
+    app.cart = []
     renderApp(app)
   }
 })
