@@ -106,6 +106,7 @@ function renderItem(item) {
 function renderAllItems(allItems) {
   let $container = createElement('div', { class: 'container mt-3' }, [])
   let $header = createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Jamazon'])
+  let $descendingButton = createElement('button', {class: 'btn btn-primary mb-3'}, ['High to Low'])
   let $row = createElement('div', { class: 'row' }, [])
   for (let i = 0; i < allItems.length; i++) {
     let $column = createElement('div', { class: 'col-xl-3 col-lg-4 col-md-5 col-sm-8 col-8 mb-3' }, [])
@@ -113,6 +114,7 @@ function renderAllItems(allItems) {
     $column.appendChild(renderItem(allItems[i]))
   }
   $container.appendChild($header)
+  $container.appendChild($descendingButton)
   $container.appendChild($row)
   return $container
 }
