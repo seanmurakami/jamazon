@@ -108,6 +108,7 @@ function renderAllItems(allItems) {
   let $container = createElement('div', { class: 'container mt-3' }, [])
   let $header = createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Jamazon'])
   let $ascendingButton = createElement('button', {class: 'btn btn-primary mb-3', sort: 'low-to-high'}, ['Low to High'])
+  let $descendingButton = createElement('button', {class: 'btn btn-primary mb-3 ml-3', sort2: 'high-to-low'}, ['High to Low'])
   let $row = createElement('div', { class: 'row' }, [])
   for (let i = 0; i < allItems.length; i++) {
     let $column = createElement('div', { class: 'col-xl-3 col-lg-4 col-md-5 col-sm-8 col-8 mb-3' }, [])
@@ -116,6 +117,7 @@ function renderAllItems(allItems) {
   }
   $container.appendChild($header)
   $container.appendChild($ascendingButton)
+  $container.appendChild($descendingButton)
   $container.appendChild($row)
   return $container
 }
@@ -132,10 +134,19 @@ function updateFilter(myItems) {
   return emptyFilter.sort(compareNumbers)
 }
 
+function updateFilter2(myItems) {
+  let emptyFilter = []
+  for (let i = 0; i < myItems.length; i++) {
+    emptyFilter.push(myItems[i])
+  }
+  let x = emptyFilter.sort(compareNumbers)
+  return x.reverse()
+}
+
 function renderApp(appObject) {
   let $cartView = document.querySelector('.my-cart')
   let $view = document.querySelector('[data-view="' + appObject.view + '"]')
-  if (appObject.view === 'catalog' || appObject.view === 'sorted') {
+  if (appObject.view === 'catalog') {
     $view.innerHTML = ''
     $cartView.innerHTML = ''
     $view.appendChild(renderAllItems(appObject.catalog.items))
@@ -297,24 +308,20 @@ function isolateObject(itemId, catalog) {
 document.querySelector('[data-view]').addEventListener('click', function (e) {
   let $filterButton = e.target.getAttribute('sort')
   if ($filterButton !== null) {
-    app.view = 'sorted'
     app.catalog.items = updateFilter(app.catalog.items)
-  }
-  renderApp(app)
-})
-
-document.querySelector('[data-view]').addEventListener('click', function (e) {
-  let x = e.target.closest('.card')
-  if (x !== null) {
-    let viewId = parseInt(x.getAttribute('dataId'), 10)
-    let itemDetail = isolateObject(viewId, app.catalog.items)
-    app.details.item = itemDetail
-    app.view = 'details'
     renderApp(app)
   }
 })
 
-document.querySelector('[data-view = sorted]').addEventListener('click', function (e) {
+document.querySelector('[data-view]').addEventListener('click', function (e) {
+  let $filterButton = e.target.getAttribute('sort2')
+  if ($filterButton !== null) {
+    app.catalog.items = updateFilter2(app.catalog.items)
+    renderApp(app)
+  }
+})
+
+document.querySelector('[data-view]').addEventListener('click', function (e) {
   let x = e.target.closest('.card')
   if (x !== null) {
     let viewId = parseInt(x.getAttribute('dataId'), 10)
