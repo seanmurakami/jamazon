@@ -202,12 +202,28 @@ function renderCheckoutItem(items) {
     createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Checkout']),
     createElement('div', { class: 'mx-auto card border-success p-4', style: 'width: 50%' }, [
       createElement('h2', {}, ['Customer Info']),
-      createElement('input', { class: 'd-block mb-3', type: 'text', placeholder: 'Name' }, []),
-      createElement('input', { class: 'd-block mb-3', type: 'text', placeholder: 'Address' }, []),
-      createElement('input', { class: 'd-block mb-3', type: 'text', placeholder: 'Credit Card' }, []),
-      createElement('p', { class: 'text-right' }, [items.length + ' Item(s)']),
-      createElement('p', { class: 'text-right text-success font-weight-bold' }, ['Total: $' + calcTotal(items)]),
-      createElement('button', { class: 'p-2 btn-primary', pay: 'go-to-message' }, ['Pay'])
+      createElement('div', { class: 'form-group' }, [
+        createElement('label', {}, ['Name']),
+        createElement('div', { class: 'form-row' }, [
+          createElement('div', { class: 'col' }, [
+            createElement('input', { class: 'form-control mb-3', type: 'text', placeholder: 'First name' }, [])
+          ]),
+          createElement('div', { class: 'col' }, [
+            createElement('input', { class: 'form-control mb-3', type: 'text', placeholder: 'Last name' }, [])
+          ])
+        ]),
+        createElement('div', { class: 'form-group' }, [
+          createElement('label', {}, ['Address']),
+          createElement('input', { class: 'form-control d-block mb-3', type: 'text', placeholder: 'Enter address' }, [])
+        ]),
+        createElement('div', { class: 'form-group' }, [
+          createElement('label', {}, ['Credit Card']),
+          createElement('input', { class: 'form-control d-block mb-3', type: 'text', placeholder: 'Enter credit card information' }, [])
+        ]),
+        createElement('p', { class: 'text-right' }, [items.length + ' Item(s)']),
+        createElement('p', { class: 'text-right text-success font-weight-bold' }, ['Total: $' + calcTotal(items)]),
+        createElement('button', { class: 'form-control p-2 btn-primary', pay: 'go-to-message' }, ['Pay'])
+      ])
     ])
   ])
   return $container
@@ -218,7 +234,7 @@ function renderAllCartItems(items) {
   let $header = createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Cart'])
   $container.appendChild($header)
   for (let i = 0; i < items.length; i++) {
-    let $row = createElement('div', {class: 'mb-3'}, [])
+    let $row = createElement('div', { class: 'mb-3' }, [])
     $row.appendChild(renderCartItem(items[i]))
     $container.appendChild($row)
   }
@@ -237,10 +253,10 @@ function renderAllCartItems(items) {
 function confirmationMessage() {
   let $container = createElement('div', { class: 'container text-center' }, [
     createElement('h1', { class: 'page-title font-weight-light' }, ['Thank you!']),
-    createElement('div', { class: 'card mx-auto', style: 'width: 50%' }, [
-      createElement('div', {class: 'card-body'}, [
-        createElement('p', {class: 'card-text'}, ['We appreciate your business!']),
-        createElement('button', {class: 'p-2 btn-primary', homepage: 'go-home'}, ['Return to Home Screen'])
+    createElement('div', { class: 'card mx-auto border-success', style: 'width: 50%' }, [
+      createElement('div', { class: 'card-body' }, [
+        createElement('p', { class: 'card-text' }, ['We appreciate your business!']),
+        createElement('button', { class: 'p-2 btn-primary', homepage: 'go-home' }, ['Return to Home Screen'])
       ])
     ])
   ])
@@ -315,7 +331,7 @@ document.querySelector('.my-cart').addEventListener('click', function (e) {
   }
 })
 
-document.querySelector('[data-view = checkout').addEventListener('click', function (e) {
+document.querySelector('[data-view = checkout]').addEventListener('click', function (e) {
   let $checkout = e.target.getAttribute('pay')
   if ($checkout !== null) {
     app.view = 'confirmation'
@@ -323,7 +339,7 @@ document.querySelector('[data-view = checkout').addEventListener('click', functi
   }
 })
 
-document.querySelector('[data-view = confirmation').addEventListener('click', function (e) {
+document.querySelector('[data-view = confirmation]').addEventListener('click', function (e) {
   let $checkout = e.target.getAttribute('homepage')
   if ($checkout !== null) {
     app.view = 'catalog'
