@@ -88,7 +88,8 @@ let app = {
     item: null
   },
   cart: [],
-  filtered: []
+  sortedItems: [],
+  filtered: 'no' // use this and add an id for the filter so that the home page knows what to view
 }
 
 function renderItem(item) {
@@ -146,10 +147,15 @@ function updateFilter2(myItems) {
 function renderApp(appObject) {
   let $cartView = document.querySelector('.my-cart')
   let $view = document.querySelector('[data-view="' + appObject.view + '"]')
-  if (appObject.view === 'catalog') {
+  if (appObject.view === 'catalog' && app.filtered === 'no') {
     $view.innerHTML = ''
     $cartView.innerHTML = ''
     $view.appendChild(renderAllItems(appObject.catalog.items))
+  }
+  if (appObject.view === 'catalog' && app.filtered === 'yes') {
+    $view.innerHTML = ''
+    $cartView.innerHTML = ''
+    $view.appendChild(renderAllItems(appObject.sortedItems))
   }
   if (appObject.view === 'details') {
     $view.innerHTML = ''
@@ -308,7 +314,8 @@ function isolateObject(itemId, catalog) {
 document.querySelector('[data-view]').addEventListener('click', function (e) {
   let $filterButton = e.target.getAttribute('sort')
   if ($filterButton !== null) {
-    app.catalog.items = updateFilter(app.catalog.items)
+    app.sortedItems = updateFilter(app.catalog.items)
+    app.filtered = 'yes'
     renderApp(app)
   }
 })
@@ -316,7 +323,8 @@ document.querySelector('[data-view]').addEventListener('click', function (e) {
 document.querySelector('[data-view]').addEventListener('click', function (e) {
   let $filterButton = e.target.getAttribute('sort2')
   if ($filterButton !== null) {
-    app.catalog.items = updateFilter2(app.catalog.items)
+    app.sortedItems = updateFilter2(app.catalog.items)
+    app.filtered = 'yes'
     renderApp(app)
   }
 })
