@@ -110,6 +110,7 @@ function renderAllItems(allItems) {
   let $header = createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Jamazon'])
   let $ascendingButton = createElement('button', {class: 'btn btn-primary mb-3', sort: 'low-to-high'}, ['Low to High'])
   let $descendingButton = createElement('button', {class: 'btn btn-primary mb-3 ml-3', sort2: 'high-to-low'}, ['High to Low'])
+  let $unsorted = createElement('button', {class: 'btn btn-primary mb-3 ml-3', unfilter: 'revert-back'}, ['Unfilter'])
   let $row = createElement('div', { class: 'row' }, [])
   for (let i = 0; i < allItems.length; i++) {
     let $column = createElement('div', { class: 'col-xl-3 col-lg-4 col-md-5 col-sm-8 col-8 mb-3' }, [])
@@ -119,6 +120,7 @@ function renderAllItems(allItems) {
   $container.appendChild($header)
   $container.appendChild($ascendingButton)
   $container.appendChild($descendingButton)
+  $container.appendChild($unsorted)
   $container.appendChild($row)
   return $container
 }
@@ -325,6 +327,14 @@ document.querySelector('[data-view]').addEventListener('click', function (e) {
   if ($filterButton !== null) {
     app.sortedItems = updateFilter2(app.catalog.items)
     app.filtered = 'yes'
+    renderApp(app)
+  }
+})
+
+document.querySelector('[data-view]').addEventListener('click', function (e) {
+  let $filterButton = e.target.getAttribute('unfilter')
+  if ($filterButton !== null) {
+    app.filtered = 'no'
     renderApp(app)
   }
 })
