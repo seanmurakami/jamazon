@@ -130,20 +130,16 @@ function compareNumbers(a, b) {
 }
 
 function updateFilter(myItems) {
-  let emptyFilter = []
-  for (let i = 0; i < myItems.length; i++) {
-    emptyFilter.push(myItems[i])
-  }
-  return emptyFilter.sort(compareNumbers)
+  return myItems
+    .map(num => num)
+    .sort(compareNumbers)
 }
 
 function updateFilter2(myItems) {
-  let emptyFilter = []
-  for (let i = 0; i < myItems.length; i++) {
-    emptyFilter.push(myItems[i])
-  }
-  let x = emptyFilter.sort(compareNumbers)
-  return x.reverse()
+  return myItems
+    .map(num => num)
+    .sort(compareNumbers)
+    .reverse()
 }
 
 function renderApp(appObject) {
@@ -298,11 +294,7 @@ function confirmationMessage() {
 }
 
 function calcTotal(myArray) {
-  let total = 0
-  for (let i = 0; i < myArray.length; i++) {
-    total += Math.round(myArray[i].price * 100) / 100
-  }
-  return total
+  return myArray.reduce((start, item) => start + Math.round(item.price * 100) / 100, 0)
 }
 
 function isolateObject(itemId, catalog) {
