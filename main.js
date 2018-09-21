@@ -89,8 +89,47 @@ let app = {
   },
   cart: [],
   sortedItems: [],
-  filtered: 'no' // use this and add an id for the filter so that the home page knows what to view
+  filtered: 'no'
 }
+
+function renderApp(appObject) {
+  let $cartView = document.querySelector('.my-cart')
+  let $view = document.querySelector('[data-view="' + appObject.view + '"]')
+  if (appObject.view === 'catalog' && app.filtered === 'no') {
+    $view.innerHTML = ''
+    $cartView.innerHTML = ''
+    $view.appendChild(renderAllItems(appObject.catalog.items))
+  }
+  if (appObject.view === 'catalog' && app.filtered === 'yes') {
+    $view.innerHTML = ''
+    $cartView.innerHTML = ''
+    $view.appendChild(renderAllItems(appObject.sortedItems))
+  }
+  if (appObject.view === 'details') {
+    $view.innerHTML = ''
+    $cartView.innerHTML = ''
+    $view.appendChild(renderDetail(appObject.details.item))
+  }
+  if (appObject.view === 'cart') {
+    $view.innerHTML = ''
+    $cartView.innerHTML = ''
+    $view.appendChild(renderAllCartItems(appObject.cart))
+  }
+  if (appObject.view === 'checkout') {
+    $view.innerHTML = ''
+    $cartView.innerHTML = ''
+    $view.appendChild(renderCheckoutItem(appObject.cart))
+  }
+  if (appObject.view === 'confirmation') {
+    $view.innerHTML = ''
+    $cartView.innerHTML = ''
+    $view.appendChild(confirmationMessage())
+  }
+  $cartView.appendChild(cartCount(appObject.cart))
+  showView(appObject.view)
+}
+
+renderApp(app)
 
 function renderItem(item) {
   let $item =
@@ -139,45 +178,6 @@ function updateFilter2(myItems) {
     .reverse()
 }
 
-function renderApp(appObject) {
-  let $cartView = document.querySelector('.my-cart')
-  let $view = document.querySelector('[data-view="' + appObject.view + '"]')
-  if (appObject.view === 'catalog' && app.filtered === 'no') {
-    $view.innerHTML = ''
-    $cartView.innerHTML = ''
-    $view.appendChild(renderAllItems(appObject.catalog.items))
-  }
-  if (appObject.view === 'catalog' && app.filtered === 'yes') {
-    $view.innerHTML = ''
-    $cartView.innerHTML = ''
-    $view.appendChild(renderAllItems(appObject.sortedItems))
-  }
-  if (appObject.view === 'details') {
-    $view.innerHTML = ''
-    $cartView.innerHTML = ''
-    $view.appendChild(renderDetail(appObject.details.item))
-  }
-  if (appObject.view === 'cart') {
-    $view.innerHTML = ''
-    $cartView.innerHTML = ''
-    $view.appendChild(renderAllCartItems(appObject.cart))
-  }
-  if (appObject.view === 'checkout') {
-    $view.innerHTML = ''
-    $cartView.innerHTML = ''
-    $view.appendChild(renderCheckoutItem(appObject.cart))
-  }
-  if (appObject.view === 'confirmation') {
-    $view.innerHTML = ''
-    $cartView.innerHTML = ''
-    $view.appendChild(confirmationMessage())
-  }
-  $cartView.appendChild(cartCount(appObject.cart))
-  showView(appObject.view)
-}
-
-renderApp(app)
-
 function renderDetail(item) {
   let $item =
     createElement('div', { class: 'container my-4' }, [
@@ -222,6 +222,10 @@ function renderCartItem(item) {
       ])
     ])
   return $item
+}
+
+function calcTotal(myArray) {
+  return myArray.reduce((start, item) => start + Math.round(item.price * 100) / 100, 0)
 }
 
 function renderAllCartItems(items) {
@@ -294,10 +298,6 @@ function confirmationMessage() {
     ])
   ])
   return $container
-}
-
-function calcTotal(myArray) {
-  return myArray.reduce((start, item) => start + Math.round(item.price * 100) / 100, 0)
 }
 
 function isolateObject(itemId, catalog) {
