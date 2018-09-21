@@ -94,7 +94,7 @@ let app = {
 
 function renderItem(item) {
   let $item =
-    createElement('div', { class: 'card border-success', style: 'height: 26rem', dataId: item.itemId }, [
+    createElement('div', { class: 'card', style: 'height: 26rem', dataId: item.itemId }, [
       createElement('img', { class: 'card-img-top p-3', style: 'max-height: 15rem', src: item.imageUrl, alt: 'image cap' }, []),
       createElement('div', { class: 'card-body text-center d-flex flex-column mt-auto' }, [
         createElement('h5', { class: 'mt-auto card-title' }, [item.brand]),
@@ -182,7 +182,7 @@ function renderDetail(item) {
   let $item =
     createElement('div', { class: 'container my-4' }, [
       createElement('div', { class: 'row' }, [
-        createElement('div', { class: 'card border-success' }, [
+        createElement('div', { class: 'card' }, [
           createElement('div', { class: 'row no-gutter p-5' }, [
             createElement('div', { class: 'col-lg-4' }, [
               createElement('img', { class: 'img-responsive w-100', src: item.imageUrl, alt: 'image cap' }, [])
@@ -206,12 +206,12 @@ function renderDetail(item) {
 
 function renderCartItem(item) {
   let $item =
-    createElement('div', { class: 'card border-success' }, [
+    createElement('div', { class: 'card', style: 'width: 70%' }, [
       createElement('div', { class: 'row no-gutter p-5' }, [
         createElement('div', { class: 'col-lg-4' }, [
           createElement('img', { class: 'img-responsive w-100', src: item.imageUrl, alt: 'cart image' }, [])
         ]),
-        createElement('div', { class: 'col d-flex align-items-center' }, [
+        createElement('div', { class: 'col' }, [
           createElement('div', { class: 'card-body' }, [
             createElement('h2', { class: 'card-title' }, [item.name]),
             createElement('p', { class: 'card-text' }, [item.brand]),
@@ -224,10 +224,37 @@ function renderCartItem(item) {
   return $item
 }
 
+function renderAllCartItems(items) {
+  let $container = createElement('div', { class: 'container my-4' }, [
+    createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Cart'])
+  ])
+  if (!items.length) {
+    const $emptyCart = createElement('div', { class: 'mx-auto card p-4 text-center', style: 'width: 50%' }, [
+      createElement('p', { class: 'card-text' }, ['Your cart is empty...'])
+    ])
+    $container.appendChild($emptyCart)
+  }
+  for (let i = 0; i < items.length; i++) {
+    let $row = createElement('div', { class: 'mb-3 d-flex justify-content-center' }, [])
+    $row.appendChild(renderCartItem(items[i]))
+    $container.appendChild($row)
+  }
+  let $itemCount = createElement('p', { class: 'text-right', style: 'width: 85%' }, [items.length + ' Item(s)'])
+  let $itemTotal = createElement('p', { class: 'text-right text-success font-weight-bold', style: 'width: 85%' }, ['Total: $' + calcTotal(items)])
+  let $goBackDiv = createElement('div', { class: 'd-flex justify-content-center' }, [
+    createElement('button', { class: 'p-2 btn-primary', continue: 'continue-shopping' }, ['Continue Shopping']),
+    createElement('button', { class: 'p-2 btn-primary ml-3', checkout: 'checkout-page' }, ['Checkout'])
+  ])
+  $container.appendChild($itemCount)
+  $container.appendChild($itemTotal)
+  $container.appendChild($goBackDiv)
+  return $container
+}
+
 function renderCheckoutItem(items) {
   let $container = createElement('div', { class: 'container my-4' }, [
     createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Checkout']),
-    createElement('div', { class: 'mx-auto card border-success p-4', style: 'width: 50%' }, [
+    createElement('div', { class: 'mx-auto card p-4', style: 'width: 50%' }, [
       createElement('h2', {}, ['Customer Info']),
       createElement('div', { class: 'form-group' }, [
         createElement('label', {}, ['Name']),
@@ -256,31 +283,10 @@ function renderCheckoutItem(items) {
   return $container
 }
 
-function renderAllCartItems(items) {
-  let $container = createElement('div', { class: 'container my-4' }, [
-    createElement('h1', { class: 'page-title font-weight-light text-center' }, ['Cart'])
-  ])
-  for (let i = 0; i < items.length; i++) {
-    let $row = createElement('div', { class: 'mb-3' }, [])
-    $row.appendChild(renderCartItem(items[i]))
-    $container.appendChild($row)
-  }
-  let $itemCount = createElement('p', { class: 'text-right' }, [items.length + ' Item(s)'])
-  let $itemTotal = createElement('p', { class: 'text-right text-success font-weight-bold' }, ['Total: $' + calcTotal(items)])
-  let $goBackDiv = createElement('div', { class: 'd-flex justify-content-center' }, [
-    createElement('button', { class: 'p-2 btn-primary', continue: 'continue-shopping' }, ['Continue Shopping']),
-    createElement('button', { class: 'p-2 btn-primary ml-3', checkout: 'checkout-page' }, ['Checkout'])
-  ])
-  $container.appendChild($itemCount)
-  $container.appendChild($itemTotal)
-  $container.appendChild($goBackDiv)
-  return $container
-}
-
 function confirmationMessage() {
   let $container = createElement('div', { class: 'container text-center' }, [
     createElement('h1', { class: 'page-title font-weight-light' }, ['Thank you!']),
-    createElement('div', { class: 'card mx-auto border-success', style: 'width: 50%' }, [
+    createElement('div', { class: 'card mx-auto', style: 'width: 50%' }, [
       createElement('div', { class: 'card-body' }, [
         createElement('p', { class: 'card-text' }, ['We appreciate your business!']),
         createElement('button', { class: 'p-2 btn-primary', homepage: 'go-home' }, ['Return to Home Screen'])
@@ -413,7 +419,7 @@ function cartCount(myCart) {
   let count = myCart.length
   let $myCart =
     createElement('div', { class: 'mt-3 d-flex flex-row-reverse' }, [
-      createElement('p', { clicker: 'cartView' }, ['Cart (' + count + ')'])
+      createElement('p', { clicker: 'cart-view' }, ['Cart (' + count + ')'])
     ])
   return $myCart
 }
